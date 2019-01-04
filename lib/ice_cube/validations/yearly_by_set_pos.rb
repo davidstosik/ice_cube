@@ -1,3 +1,7 @@
+require "active_support/core_ext/date/calculations"
+require "active_support/core_ext/time/calculations"
+require "active_support/core_ext/date_time/calculations"
+
 module IceCube
 
   module Validations::YearlyBySetPos
@@ -40,11 +44,10 @@ module IceCube
       end
 
       def validate(step_time, schedule)
-        start_of_year = TimeUtil.start_of_year step_time
-        end_of_year = TimeUtil.end_of_year step_time
+        start_of_year = step_time.beginning_of_year
+        end_of_year = step_time.end_of_year
 
-
-        new_schedule = IceCube::Schedule.new(TimeUtil.previous_year(step_time)) do |s|
+        new_schedule = IceCube::Schedule.new(step_time.last_year) do |s|
           s.add_recurrence_rule IceCube::Rule.from_hash(rule.to_hash.reject{|k, v| [:by_set_pos, :count, :until].include? k})
         end
 

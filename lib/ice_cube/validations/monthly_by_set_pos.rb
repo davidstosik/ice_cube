@@ -1,3 +1,7 @@
+require "active_support/core_ext/date/calculations"
+require "active_support/core_ext/time/calculations"
+require "active_support/core_ext/date_time/calculations"
+
 module IceCube
 
   module Validations::MonthlyBySetPos
@@ -40,11 +44,10 @@ module IceCube
       end
 
       def validate(step_time, schedule)
-        start_of_month = TimeUtil.start_of_month step_time
-        end_of_month = TimeUtil.end_of_month step_time
+        start_of_month = step_time.beginning_of_month
+        end_of_month = step_time.end_of_month
 
-
-        new_schedule = IceCube::Schedule.new(TimeUtil.previous_month(step_time)) do |s|
+        new_schedule = IceCube::Schedule.new(step_time.last_month) do |s|
           s.add_recurrence_rule IceCube::Rule.from_hash(rule.to_hash.reject{|k, v| [:by_set_pos, :count, :until].include? k})
         end
 
