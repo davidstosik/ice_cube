@@ -12,7 +12,6 @@ module IceCube
     # include Validations::DayOfYear    # n/a
 
     include Validations::MonthlyInterval
-    include Validations::MonthlyBySetPos
 
     def initialize(interval = 1)
       super

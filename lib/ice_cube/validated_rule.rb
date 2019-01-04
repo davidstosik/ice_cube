@@ -8,6 +8,7 @@ module IceCube
 
     include Validations::Count
     include Validations::Until
+    include Validations::BySetPos
 
     # Validations ordered for efficiency in sequence of:
     # * descending intervals
