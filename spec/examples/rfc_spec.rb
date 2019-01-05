@@ -325,6 +325,24 @@ describe IceCube::Schedule do
     expect(dates).to eq(expecation)
   end
 
+  it 'should ~ third instance into the month of one of Tuesday, Wednesday, or Thursday, for the next 3 months' do
+    start_time = Time.utc(1997, 9, 4, 9, 0, 0)
+    schedule = IceCube::Schedule.new(start_time)
+    schedule.add_recurrence_rule IceCube::Rule.monthly.count(3).day(:tuesday , :wednesday , :thursday).by_set_pos(3)
+    dates = schedule.all_occurrences
+    expectation = [Time.utc(1997, 9, 4, 9), Time.utc(1997, 10, 7, 9), Time.utc(1997, 11, 6, 9)]
+    expect(dates).to eq(expectation)
+  end
+
+  it 'should ~ second-to-last weekday of the month' do
+    start_time = Time.utc(1997, 9, 29, 9, 0, 0)
+    schedule = IceCube::Schedule.new(start_time)
+    schedule.add_recurrence_rule IceCube::Rule.monthly.day(:monday, :tuesday , :wednesday , :thursday, :friday).by_set_pos(-2)
+    next_dates = schedule.occurrences(Time.utc(1997, 12, 31))
+    expectation = [Time.utc(1997, 9, 29, 9), Time.utc(1997, 10, 30, 9), Time.utc(1997, 11, 27, 9), Time.utc(1997, 12, 30, 9)]
+    expect(next_dates).to eq(expectation)
+  end
+
 end
 
 def test_expectations(schedule, dates_array)

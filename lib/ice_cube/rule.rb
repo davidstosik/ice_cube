@@ -58,6 +58,10 @@ module IceCube
       next_time(time, schedule, time).to_i == time.to_i
     end
 
+    def interval_type
+      self.class.interval_type
+    end
+
     class << self
 
       # Convert from a hash and create a rule
@@ -88,6 +92,10 @@ module IceCube
         end
 
         rule
+      end
+
+      def interval_type
+        @_interval_type ||= self.name.split('::').last.sub(/Rule$/, '').downcase
       end
 
       private

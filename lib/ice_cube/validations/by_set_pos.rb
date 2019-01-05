@@ -78,35 +78,43 @@ module IceCube
           )
         end
 
-        def period_type
-          case source_rule
-          when SecondlyRule
-            :second
-          when MinutelyRule
-            :minute
-          when HourlyRule
-            :hour
-          when DailyRule
-            :day
-          when WeeklyRule
-            :week
-          when MonthlyRule
-            :month
-          when YearlyRule
-            :year
+        def interval_type
+          if source_rule.interval_type == 'daily'
+            'day'
+          else
+            source_rule.interval_type.sub(/ly$/, '')
           end
         end
 
         def beginning_of_period
-          step_time.public_send("beginning_of_#{period_type}")
+          if interval_type == 'second'
+            fail 'boo'
+          else
+            step_time.public_send("beginning_of_#{interval_type}")
+          end
         end
 
         def end_of_period
-          step_time.public_send("end_of_#{period_type}")
+          if interval_type == 'second'
+            fail 'boo'
+          else
+            step_time.public_send("end_of_#{interval_type}")
+          end
         end
 
         def last_period
-          step_time.public_send("last_#{period_type}")
+          case interval_type
+          when 'second'
+            fail 'boo'
+          when 'minute'
+            step_time - ONE_MINUTE
+          when 'hour'
+            step_time - ONE_HOUR
+          when 'day'
+            step_time.yesterday
+          when 'week', 'month', 'year'
+            step_time.public_send("last_#{interval_type}")
+          end
         end
 
         def schedule_for_rule
