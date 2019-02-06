@@ -77,6 +77,14 @@ describe IceCube::YearlyRule do
     expect(schedule.occurrences(Time.utc(2010, 12, 31))).to eq days_of_year
   end
 
+  it 'should produce the correct days for @interval = 1 when you specify week days' do
+    start_time = Time.utc(2010, 1, 1)
+    schedule = IceCube::Schedule.new(start_time)
+    schedule.add_recurrence_rule IceCube::Rule.yearly.day(:monday)
+
+    expect(schedule.occurrences(Time.utc(2010, 12, 31)).count).to eq 52
+  end
+
   it 'should produce the correct days for @interval = 1 when you specify negative days' do
     schedule = IceCube::Schedule.new(Time.utc(2010, 1, 1))
     schedule.add_recurrence_rule IceCube::Rule.yearly.day_of_year(100, -1)
