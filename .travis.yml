@@ -1,7 +1,10 @@
 sudo: false
 language: ruby
 before_install:
-  - gem install bundler
+  - if [[ $TRAVIS_RUBY_VERSION =~ ^(1|2\.[012]|jruby-1)\. ]]; then gem install rubygems-update --version '~> 2.7' --no-document && update_rubygems; elif [[ ! $TRAVIS_RUBY_VERSION =~ ^truffleruby- ]]; then gem update --system; fi
+  - gem --version
+  - if [[ $TRAVIS_RUBY_VERSION =~ ^(1|2\.[012]|jruby-1)\. ]]; then gem install bundler --version '~> 1.17'; else gem install bundler; fi
+  - bundle --version
 notifications:
   email:
     - john.crepezzi@gmail.com
